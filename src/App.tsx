@@ -1,6 +1,6 @@
+import keys, { type Key } from "ctrl-keys";
 import { useEffect, useState } from "react";
-
-import keys, { type Character, type Key } from 'ctrl-keys'
+import { debounce, throttle } from "lodash";
 
 const playNote = (note: HTMLAudioElement) => {
 	note.pause(); // important!!!
@@ -8,14 +8,30 @@ const playNote = (note: HTMLAudioElement) => {
 	note.play();
 };
 
+const loopNote = (note: HTMLAudioElement) => {
+	//turn this on if i wanna make the hold note sound funky lmao
+	// // if(note.currentTime + 100 >)
+	// if(note.currentTime < note.duration - 0.3599999){
+	// 	//do nothing
+	// 	return;
+	// }
+	// console.log("looping note",note.currentTime, note.duration);
+	// //otherwise we loop
+	// note.pause();
+	// console.timeEnd("play");
+	// note.currentTime = note.duration - 0.36;
+	// console.log(note.duration - 0.36, note.duration - 0.359);
+	// console.time("play");
+	// note.play();
+}
+
 
 function App() {
-	const [count, setCount] = useState(0);
-
+	// const [holdingMap, setHoldingMap] = useState<Record<string, boolean>>({});
 	const handler = keys();
 
 	const audioElementC4 = new Audio("src/assets/notes/c4.mp3");
-	const audioElementD4= new Audio("src/assets/notes/d4.mp3");
+	const audioElementD4 = new Audio("src/assets/notes/d4.mp3");
 	const audioElementE4 = new Audio("src/assets/notes/e4.mp3");
 	const audioElementF4 = new Audio("src/assets/notes/f4.mp3");
 	const audioElementG4 = new Audio("src/assets/notes/g4.mp3");
@@ -24,26 +40,44 @@ function App() {
 	const audioElementC5 = new Audio("src/assets/notes/c5.mp3");
 
 	const DEFAULT_KEY_MAPPING: Record<string, HTMLAudioElement> = {
-		"a": audioElementC4,
-		"s": audioElementD4,
-		"d": audioElementE4,
-		"f": audioElementF4,
-		"g": audioElementG4,
-		"h": audioElementA5,
-		"j": audioElementB5,
-		"k": audioElementC5,
-	}
+		a: audioElementC4,
+		s: audioElementD4,
+		d: audioElementE4,
+		f: audioElementF4,
+		g: audioElementG4,
+		h: audioElementA5,
+		j: audioElementB5,
+		k: audioElementC5,
+	};
+
 	
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		Object.entries(DEFAULT_KEY_MAPPING).forEach(([key, audioElement]) => {
-			handler.add(key as Key, () => playNote(audioElement));
-		});
+			handler.add(key as Key, (e) => {
+				if(!e?.repeat) {
+					playNote(audioElement);
+				}
+				else{
+					console.log("looping note due to key hold", e?.repeat);
+				loopNote(audioElement)}}
+			)});
 		window.addEventListener("keydown", (event) => {
+
+			// setHoldingMap((prev) => ({
+			// 	...prev,
+			// 	[event.key]: true,
+			// }));
 			// keyboardPlaying(event);
 			handler.handle(event);
 		});
+		// window.addEventListener("keyup", (event) => {
+		// 	// setHoldingMap((prev) => ({
+		// 	// 	...prev,
+		// 	// 	[event.key]: false,
+		// 	// }));
+		// });
 		return window.removeEventListener("keydown", () => {
 			console.log("unmounted");
 		});
@@ -55,14 +89,6 @@ function App() {
 				<a href="https://react.dev">a</a>
 			</div>
 			<h1>Vite + React</h1>
-			<div className="card">
-				<button type="button" onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
-			</div>
 			<p className="read-the-docs">
 				Click on the Vite and React logos to learn more
 			</p>
@@ -74,13 +100,11 @@ function App() {
 						onClick={() => {
 							playNote(audioElement);
 						}}
-					>				
-{						audioElement.src.slice(-6, -4)
-}						{" "}
-						({key.toUpperCase()}) note
+					>
+						{audioElement.src.slice(-6, -4)} ({key.toUpperCase()}) note
 					</button>
 				);
-		})}
+			})}
 		</>
 	);
 }
@@ -88,9 +112,6 @@ function App() {
 export default App;
 
 //PROBLEM TO SOLVE
-//Audio get cut off
-//Cannot have multiple notes playing at the same time
-//Holding a key repeat the note repeatedly - instead it should trail off
 //Buttons are not styled - no indicator when it is pressed
-	//indicator when press
-	// Keys mapping feature
+//indicator when press
+// Keys mapping feature
