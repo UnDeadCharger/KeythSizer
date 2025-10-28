@@ -1,29 +1,34 @@
-const audioElementC4 = new Audio("src/assets/notes/c4.mp3");
-const audioElementD4 = new Audio("src/assets/notes/d4.mp3");
-const audioElementE4 = new Audio("src/assets/notes/e4.mp3");
-const audioElementF4 = new Audio("src/assets/notes/f4.mp3");
-const audioElementG4 = new Audio("src/assets/notes/g4.mp3");
-const audioElementA5 = new Audio("src/assets/notes/a5.mp3");
-const audioElementB5 = new Audio("src/assets/notes/b5.mp3");
-const audioElementC5 = new Audio("src/assets/notes/c5.mp3");
+import { type Key, keys } from "ctrl-keys";
+import PianoKeys from "./PianoKeys";
+import { useEffect } from "react";
 
-const DEFAULT_KEY_MAPPING: Record<string, HTMLAudioElement> = {
-    a: audioElementC4,
-    s: audioElementD4,
-    d: audioElementE4,
-    f: audioElementF4,
-    g: audioElementG4,
-    h: audioElementA5,
-    j: audioElementB5,
-    k: audioElementC5,
+const defaultPath = "src/assets/notes/";
+
+
+const DEFAULT_KEY_MAPPING: Partial<Record<Key, string>> = {
+	a: `${defaultPath}c4.mp3`,
+	s: `${defaultPath}d4.mp3`,
+	d: `${defaultPath}e4.mp3`,
+	f: `${defaultPath}f4.mp3`,
+	g: `${defaultPath}g4.mp3`,
+	h: `${defaultPath}a5.mp3`,
+	j: `${defaultPath}b5.mp3`,
+	k: `${defaultPath}c5.mp3`,
 };
 
-
-
 function NotePlayContainer() {
-  return (
-    <div>NotePlayContainer</div>
-  )
+	const handler = keys();
+
+  useEffect(() => {
+    	window.addEventListener("keyup", (event) => {
+        handler.handle(event);
+    	});
+    	return window.removeEventListener("keydown", () => {
+    		console.log("unmounted");
+    	});
+    }, []);
+
+	return <PianoKeys KeyMap={DEFAULT_KEY_MAPPING} handler={handler} />;
 }
 
-export default NotePlayContainer
+export default NotePlayContainer;

@@ -2,8 +2,8 @@ import type { Key } from 'ctrl-keys';
 import React, { useEffect, useState } from 'react'
 import { linkAudioToKey } from './helper';
 
-type UseNotePlayingProps = {
-    key: Key;
+export type UseNotePlayingProps = {
+  shortCutKey: Key;
     audioFilePath: string;    handler: any;
 }
 
@@ -18,8 +18,10 @@ type UseNotePlayingProps = {
 //       .forEach((ele) => ele.classList.remove("bg-gray-400", "bg-opacity-10"));
 //   },
 
+
 export const onNotePlaying =  (key: Key) => {
     const elements = document.querySelectorAll(`.piano-key-${key}`);
+    console.log("Highlighting key", key, elements);
     elements.forEach((ele) => {
         ele.classList.add("bg-blue-400", "bg-opacity-30");
     });
@@ -33,17 +35,19 @@ export const onNoteStop = (key: Key) => {
 }
 
 
-export function useNotePlaying({ key, audioFilePath, handler }: UseNotePlayingProps) {
+export function useNotePlaying({ shortCutKey, audioFilePath, handler }: UseNotePlayingProps) {
   const [isPlaying, setIsPlaying] = useState(false);
 
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Only used once
   useEffect(() => {
-    linkAudioToKey({ audioFilePath, key, handler });
+    linkAudioToKey({ audioFilePath, shortCutKey, handler });
+    return;
   },[])
 
   return {
     isPlaying,
+    setIsPlaying 
   }
 }
 

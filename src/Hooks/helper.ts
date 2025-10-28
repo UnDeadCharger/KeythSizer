@@ -7,23 +7,21 @@ import { onNotePlaying, onNoteStop } from "./useNotePlaying";
 
 type LinkAudioProps = {
 	audioFilePath: string;
-	key: Key;
+	shortCutKey: Key;
 	handler: any;
 };
 
-export const linkAudioToKey = ({ audioFilePath, key, handler }: LinkAudioProps) => {
+export const linkAudioToKey = ({ audioFilePath, shortCutKey, handler }: LinkAudioProps) => {
 	const audioElement = new Audio(audioFilePath);
 
-	handler.add(key as Key, (e: KeyboardEvent) => {
-		onNotePlaying(key);
+	handler.add(shortCutKey as Key, (e: KeyboardEvent) => {
+		console.log(`Key ${shortCutKey} pressed`);
+		onNotePlaying(shortCutKey);
 		if (!e?.repeat) {
 			playNote(audioElement);
 		} else {
 			console.log("looping note due to key hold", e?.repeat);
 			loopNote(audioElement);
-		}
-		if(e?.type === "keyup"){
-			onNoteStop(key);
 		}
 	});
 
