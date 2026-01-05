@@ -1,5 +1,5 @@
 import type { Key } from 'ctrl-keys';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { linkAudioToKey } from './helper';
 
 export type UseNotePlayingProps = {

@@ -1,6 +1,3 @@
-import keys, { type Key } from "ctrl-keys";
-import { useEffect, useState } from "react";
-import { debounce, throttle } from "lodash";
 import NotePlayContainer from "./PianoKey/NotePlayContainer";
 
 

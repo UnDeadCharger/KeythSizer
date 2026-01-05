@@ -2,8 +2,7 @@
 //Return audio component with file path
 //
 import type { Key } from "ctrl-keys";
-import React from "react";
-import { onNotePlaying, onNoteStop } from "./useNotePlaying";
+import { onNotePlaying } from "./useNotePlaying";
 
 type LinkAudioProps = {
 	audioFilePath: string;
@@ -35,19 +34,19 @@ export const playNote = (note: HTMLAudioElement) => {
 };
 
 export const loopNote = (note: HTMLAudioElement) => {
-	//turn this on if i wanna make the hold note sound funky lmao
-	// // if(note.currentTime + 100 >)
-	// if(note.currentTime < note.duration - 0.3599999){
-	// 	//do nothing
-	// 	return;
-	// }
-	// console.log("looping note",note.currentTime, note.duration);
-	// //otherwise we loop
-	// note.pause();
-	// console.timeEnd("play");
-	// note.currentTime = note.duration - 0.36;
-	// console.log(note.duration - 0.36, note.duration - 0.359);
-	// console.time("play");
-	// note.play();
+	// turn this on if i wanna make the hold note sound funky lmao
+	// if(note.currentTime + 100 >)
+	if(note.currentTime < note.duration - 0.3599999){
+		//do nothing
+		return;
+	}
+	console.log("looping note",note.currentTime, note.duration);
+	//otherwise we loop
+	note.pause();
+	console.timeEnd("play");
+	note.currentTime = note.duration - 0.36;
+	console.log(note.duration - 0.36, note.duration - 0.359);
+	console.time("play");
+	note.play();
 };
 

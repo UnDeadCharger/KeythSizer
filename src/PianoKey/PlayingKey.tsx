@@ -1,5 +1,4 @@
-import React from 'react'
-import useNotePlaying, { type UseNotePlayingProps } from '../Hooks/useNotePlaying'
+import useNotePlaying, { type UseNotePlayingProps } from '../Hooks/useNotePlaying';
 
 function PlayingKey(
   { shortCutKey, audioFilePath, handler }: UseNotePlayingProps
